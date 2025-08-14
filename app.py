@@ -32,17 +32,8 @@ continuous_cols = [
 ]
 
 if not file:
+    df = pd.read_csv("mydata.csv") 
     st.info("No file uploaded. Using sample data.")
-    df = pd.DataFrame({
-        'lot area':[3000,4000,2500,3500],
-        'Area of the house(excluding basement)':[1200,1500,900,1100],
-        'Area of the basement':[300,400,200,250],
-        'living_area_renov':[50,80,20,35],
-        'lot_area_renov':[0,10,0,0],
-        'Distance from the airport':[10,15,8,12],
-        'Property Age':[5,10,2,8],
-        'Renovation Age':[1,3,0,2],
-        'Price':[150000,200000,120000,160000]
     })
 else:
     df = pd.read_csv(file)
