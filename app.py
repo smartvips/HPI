@@ -116,7 +116,7 @@ basic_inputs = [
 basic_inputs = [c for c in basic_inputs if c in numeric_cols]
 
 # Compute dataset medians for all numeric features to auto-fill missing ones
-medians = X_full[numeric_cols].median(numeric_only=True).to_dict()
+medians = X[numeric_cols].median(numeric_only=True).to_dict()
 
 with st.form("predict_basic"):
     st.caption("Enter a few basic values; the rest of the model inputs will use the dataset medians.")
