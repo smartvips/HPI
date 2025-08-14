@@ -32,7 +32,7 @@ continuous_cols = [
 ]
 
 if not file:
-    df = pd.read_csv("mydata.csv") 
+    df = pd.read_csv("Data.csv") 
     st.info("No file uploaded. Using sample data.")
     
 else:
