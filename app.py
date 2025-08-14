@@ -102,14 +102,35 @@ ax.set_ylabel("Predicted Price")
 ax.set_title("Actual vs Predicted")
 st.pyplot(fig)
 
-st.subheader("Predict (Single Row)")
-with st.form("predict"):
-    inputs = {}
-    for col in numeric_cols:
-        default = float(df[col].median()) if pd.api.types.is_numeric_dtype(df[col]) else 0.0
-        inputs[col] = st.number_input(col, value=default)
-    submit = st.form_submit_button("Predict Price")
-    if submit:
-        new_df = pd.DataFrame([inputs])
+# ---- Predict with fewer inputs ----
+st.subheader("Predict (Fewer Inputs)")
+
+# Choose a small subset of "basic" inputs to ask from the user
+basic_inputs = [
+    'Area of the house(excluding basement)',
+    'lot area',
+    'Property Age',
+    'Distance from the airport'
+]
+# Keep only those that truly exist in the dataset's numeric columns
+basic_inputs = [c for c in basic_inputs if c in numeric_cols]
+
+# Compute dataset medians for all numeric features to auto-fill missing ones
+medians = X_full[numeric_cols].median(numeric_only=True).to_dict()
+
+with st.form("predict_basic"):
+    st.caption("Enter a few basic values; the rest of the model inputs will use the dataset medians.")
+    user_vals = {}
+    for col in basic_inputs:
+        default = float(medians.get(col, 0.0))
+        user_vals[col] = st.number_input(col, value=default)
+    submitted = st.form_submit_button("Predict Price")
+    if submitted:
+        # Start with medians for all numeric features
+        row = {c: float(medians.get(c, 0.0)) for c in numeric_cols}
+        # Override with user-provided values for the basic subset
+        for k, v in user_vals.items():
+            row[k] = v
+        new_df = pd.DataFrame([row], columns=numeric_cols)
         pred = pipe.predict(new_df)[0]
         st.success(f"Predicted Price: {pred:,.2f}")
